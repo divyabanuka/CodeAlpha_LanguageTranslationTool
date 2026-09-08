@@ -23,13 +23,13 @@ def translate_text(text, source, target):
 
     if source == target:
         return text
-
-    try:
-        translator = MyMemoryTranslator(
-            source=languages[source],
-            target=languages[target]
-        )
-        return translator.translate(text)
+try:
+    translator = MyMemoryTranslator(
+        source=languages[source],
+        target=languages[target]
+    )
+    return translator.translate(text)
+  
     except Exception as e:
         return f"Translation error: {e}"
 
