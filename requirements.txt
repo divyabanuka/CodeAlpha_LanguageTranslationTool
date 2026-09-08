@@ -1,2 +1,2 @@
 gradio
-deep-translator
+deep-translator==1.11.4
