@@ -25,7 +25,7 @@ def translate_text(text, source, target):
         return text
 
     try:
-        translator = GoogleTranslator(
+        translator = MyMemoryTranslator(
             source=languages[source],
             target=languages[target]
         )
