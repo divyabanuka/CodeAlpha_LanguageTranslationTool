@@ -36,7 +36,10 @@ def translate_text(text, source, target):
         return f"Translation error: {e}"
 
 
-with gr.Blocks(title="AI Language Translator") as app:
+with gr.Blocks(
+    title="AI Language Translator",
+    theme=gr.themes.Soft()
+) as app:
     gr.Markdown("# 🌍 AI Language Translation Tool")
 
     gr.Markdown(
