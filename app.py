@@ -3,19 +3,20 @@ import gradio as gr
 from deep_translator import MyMemoryTranslator
 
 languages = {
-    "English": "english",
-    "Hindi": "hindi",
-    "Telugu": "telugu",
-    "Tamil": "tamil",
-    "Kannada": "kannada",
-    "Malayalam": "malayalam",
-    "Spanish": "spanish",
-    "French": "french",
-    "German": "german",
-    "Japanese": "japanese",
-    "Chinese": "chinese",
-    "Arabic": "arabic"
+    "English": "en-GB",
+    "Hindi": "hi-IN",
+    "Telugu": "te-IN",
+    "Tamil": "ta-IN",
+    "Kannada": "kn-IN",
+    "Malayalam": "ml-IN",
+    "Spanish": "es-ES",
+    "French": "fr-FR",
+    "German": "de-DE",
+    "Japanese": "ja-JP",
+    "Chinese": "zh-CN",
+    "Arabic": "ar-SA"
 }
+
 
 def translate_text(text, source, target):
     if not text.strip():
@@ -23,19 +24,24 @@ def translate_text(text, source, target):
 
     if source == target:
         return text
-try:
-    translator = MyMemoryTranslator(
-        source=languages[source],
-        target=languages[target]
-    )
-    return translator.translate(text)
-  
+
+    try:
+        translator = MyMemoryTranslator(
+            source=languages[source],
+            target=languages[target]
+        )
+        return translator.translate(text)
+
     except Exception as e:
         return f"Translation error: {e}"
 
+
 with gr.Blocks(title="AI Language Translator") as app:
     gr.Markdown("# 🌍 AI Language Translation Tool")
-    gr.Markdown("Translate text instantly between multiple languages")
+
+    gr.Markdown(
+        "Translate text instantly between multiple languages"
+    )
 
     text_input = gr.Textbox(
         label="Enter text",
@@ -56,6 +62,7 @@ with gr.Blocks(title="AI Language Translator") as app:
         )
 
     translate_button = gr.Button("Translate")
+
     output = gr.Textbox(label="Translated Text")
 
     translate_button.click(
@@ -64,7 +71,6 @@ with gr.Blocks(title="AI Language Translator") as app:
         outputs=output
     )
 
-translate_button = translate_button
 
 app.launch(
     server_name="0.0.0.0",
