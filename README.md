@@ -31,7 +31,7 @@ An AI-powered language translation tool built with Python and Gradio.
 This project was created as part of the **CodeAlpha Language Translation Tool Task 1**.
 ## 🌐 Live Demo
 
-[👉 Open the AI Language Translation Tool](https://guagetranslationtool-56v5.onrender.com)
+[👉 Open the AI Language Translation Tool](https://codealpha-languagetranslationtool-56v5.onrender.com/)
 
 ## 👩‍💻 Author
 
