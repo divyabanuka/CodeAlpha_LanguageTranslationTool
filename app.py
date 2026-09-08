@@ -3,18 +3,18 @@ import gradio as gr
 from deep_translator import MyMemoryTranslator
 
 languages = {
-    "English": "en",
-    "Hindi": "hi",
-    "Telugu": "te",
-    "Tamil": "ta",
-    "Kannada": "kn",
-    "Malayalam": "ml",
-    "Spanish": "es",
-    "French": "fr",
-    "German": "de",
-    "Japanese": "ja",
-    "Chinese": "zh-CN",
-    "Arabic": "ar"
+    "English": "english",
+    "Hindi": "hindi",
+    "Telugu": "telugu",
+    "Tamil": "tamil",
+    "Kannada": "kannada",
+    "Malayalam": "malayalam",
+    "Spanish": "spanish",
+    "French": "french",
+    "German": "german",
+    "Japanese": "japanese",
+    "Chinese": "chinese",
+    "Arabic": "arabic"
 }
 
 def translate_text(text, source, target):
