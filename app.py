@@ -1,6 +1,6 @@
 import os
 import gradio as gr
-from deep_translator import GoogleTranslator
+from deep_translator import MyMemoryTranslator
 
 languages = {
     "English": "en",
