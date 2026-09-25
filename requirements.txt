@@ -1,2 +1,2 @@
 gradio
-deep-translator==1.11.4
+requests
