@@ -2,6 +2,8 @@ import os
 import gradio as gr
 from deep_translator import GoogleTranslator
 
+# ---------------- LANGUAGE LIST ----------------
+
 languages = {
     "English": "en",
     "Hindi": "hi",
@@ -18,8 +20,11 @@ languages = {
 }
 
 
+# ---------------- TRANSLATION FUNCTION ----------------
+
 def translate_text(text, source, target):
-    if not text.strip():
+
+    if not text or not text.strip():
         return "Please enter some text."
 
     if source == target:
@@ -31,33 +36,39 @@ def translate_text(text, source, target):
             target=languages[target]
         )
 
-        result = translator.translate(text)
+        translated_text = translator.translate(text)
 
-        if not result:
-            return "Translation failed. Please try again."
+        if translated_text:
+            return translated_text
 
-        return result
+        return "Translation failed. Please try again."
 
     except Exception as e:
-        return f"Translation error: {e}"
+        return f"Translation error: {str(e)}"
 
+
+# ---------------- GRADIO APP ----------------
 
 with gr.Blocks(
     title="AI Language Translator",
     theme=gr.themes.Soft()
 ) as app:
 
-    gr.Markdown("# 🌍 AI Language Translation Tool")
+    gr.Markdown(
+        "# 🌍 AI Language Translation Tool"
+    )
 
     gr.Markdown(
         "Translate text instantly between multiple languages"
     )
 
+    # Text input
     text_input = gr.Textbox(
         label="Enter text",
         placeholder="Type your text here..."
     )
 
+    # Language selection
     with gr.Row():
 
         source = gr.Dropdown(
@@ -72,18 +83,27 @@ with gr.Blocks(
             label="Target Language"
         )
 
-    translate_button = gr.Button("Translate")
-
-    output = gr.Textbox(
-        label="Translated Text"
+    # Translate button
+    translate_button = gr.Button(
+        "Translate",
+        variant="primary"
     )
 
+    # Output
+    output = gr.Textbox(
+        label="Translated Text",
+        interactive=False
+    )
+
+    # Button action
     translate_button.click(
-        translate_text,
+        fn=translate_text,
         inputs=[text_input, source, target],
         outputs=output
     )
 
+
+# ---------------- LAUNCH APP ----------------
 
 app.launch(
     server_name="0.0.0.0",
