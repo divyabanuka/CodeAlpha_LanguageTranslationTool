@@ -1,20 +1,20 @@
 import os
 import gradio as gr
-from deep_translator import MyMemoryTranslator
+from deep_translator import GoogleTranslator
 
 languages = {
-    "English": "en-GB",
-    "Hindi": "hi-IN",
-    "Telugu": "te-IN",
-    "Tamil": "ta-IN",
-    "Kannada": "kn-IN",
-    "Malayalam": "ml-IN",
-    "Spanish": "es-ES",
-    "French": "fr-FR",
-    "German": "de-DE",
-    "Japanese": "ja-JP",
+    "English": "en",
+    "Hindi": "hi",
+    "Telugu": "te",
+    "Tamil": "ta",
+    "Kannada": "kn",
+    "Malayalam": "ml",
+    "Spanish": "es",
+    "French": "fr",
+    "German": "de",
+    "Japanese": "ja",
     "Chinese": "zh-CN",
-    "Arabic": "ar-SA"
+    "Arabic": "ar"
 }
 
 
@@ -26,11 +26,17 @@ def translate_text(text, source, target):
         return text
 
     try:
-        translator = MyMemoryTranslator(
+        translator = GoogleTranslator(
             source=languages[source],
             target=languages[target]
         )
-        return translator.translate(text)
+
+        result = translator.translate(text)
+
+        if not result:
+            return "Translation failed. Please try again."
+
+        return result
 
     except Exception as e:
         return f"Translation error: {e}"
@@ -40,6 +46,7 @@ with gr.Blocks(
     title="AI Language Translator",
     theme=gr.themes.Soft()
 ) as app:
+
     gr.Markdown("# 🌍 AI Language Translation Tool")
 
     gr.Markdown(
@@ -52,6 +59,7 @@ with gr.Blocks(
     )
 
     with gr.Row():
+
         source = gr.Dropdown(
             choices=list(languages.keys()),
             value="English",
@@ -66,7 +74,9 @@ with gr.Blocks(
 
     translate_button = gr.Button("Translate")
 
-    output = gr.Textbox(label="Translated Text")
+    output = gr.Textbox(
+        label="Translated Text"
+    )
 
     translate_button.click(
         translate_text,
