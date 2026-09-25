@@ -1,26 +1,26 @@
 import os
+import requests
 import gradio as gr
-from deep_translator import GoogleTranslator
 
 # ---------------- LANGUAGE LIST ----------------
 
 languages = {
-    "English": "en",
-    "Hindi": "hi",
-    "Telugu": "te",
-    "Tamil": "ta",
-    "Kannada": "kn",
-    "Malayalam": "ml",
-    "Spanish": "es",
-    "French": "fr",
-    "German": "de",
-    "Japanese": "ja",
-    "Chinese": "zh-CN",
-    "Arabic": "ar"
+    "English": "English",
+    "Hindi": "Hindi",
+    "Telugu": "Telugu",
+    "Tamil": "Tamil",
+    "Kannada": "Kannada",
+    "Malayalam": "Malayalam",
+    "Spanish": "Spanish",
+    "French": "French",
+    "German": "German",
+    "Japanese": "Japanese",
+    "Chinese": "Chinese",
+    "Arabic": "Arabic"
 }
 
 
-# ---------------- TRANSLATION FUNCTION ----------------
+# ---------------- GEMINI TRANSLATION ----------------
 
 def translate_text(text, source, target):
 
@@ -30,18 +30,65 @@ def translate_text(text, source, target):
     if source == target:
         return text
 
+    api_key = os.environ.get("GEMINI_API_KEY")
+
+    if not api_key:
+        return "Error: GEMINI_API_KEY is not configured."
+
+    prompt = f"""
+Translate the following text from {source} to {target}.
+
+Return ONLY the translated text.
+Do not add explanations, quotation marks, or extra text.
+
+Text:
+{text}
+"""
+
+    url = (
+        "https://generativelanguage.googleapis.com/"
+        "v1beta/models/gemini-2.5-flash:generateContent"
+    )
+
+    headers = {
+        "Content-Type": "application/json",
+        "x-goog-api-key": api_key
+    }
+
+    data = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": prompt
+                    }
+                ]
+            }
+        ]
+    }
+
     try:
-        translator = GoogleTranslator(
-            source=languages[source],
-            target=languages[target]
+
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            timeout=30
         )
 
-        translated_text = translator.translate(text)
+        if response.status_code != 200:
+            return f"Translation error: {response.text}"
 
-        if translated_text:
-            return translated_text
+        result = response.json()
 
-        return "Translation failed. Please try again."
+        translated_text = (
+            result["candidates"][0]["content"]["parts"][0]["text"]
+        )
+
+        return translated_text.strip()
+
+    except requests.exceptions.Timeout:
+        return "Translation error: Request timed out. Please try again."
 
     except Exception as e:
         return f"Translation error: {str(e)}"
@@ -62,13 +109,11 @@ with gr.Blocks(
         "Translate text instantly between multiple languages"
     )
 
-    # Text input
     text_input = gr.Textbox(
         label="Enter text",
         placeholder="Type your text here..."
     )
 
-    # Language selection
     with gr.Row():
 
         source = gr.Dropdown(
@@ -83,19 +128,16 @@ with gr.Blocks(
             label="Target Language"
         )
 
-    # Translate button
     translate_button = gr.Button(
         "Translate",
         variant="primary"
     )
 
-    # Output
     output = gr.Textbox(
         label="Translated Text",
         interactive=False
     )
 
-    # Button action
     translate_button.click(
         fn=translate_text,
         inputs=[text_input, source, target],
@@ -103,7 +145,7 @@ with gr.Blocks(
     )
 
 
-# ---------------- LAUNCH APP ----------------
+# ---------------- START SERVER ----------------
 
 app.launch(
     server_name="0.0.0.0",
